@@ -1,4 +1,4 @@
-class NearbyPlacesResponse {
+/*class NearbyPlacesResponse {
   List<Results>? results;
   String? status;
 
@@ -252,3 +252,4 @@ class PlusCode {
     return data;
   }
 }
+*/
