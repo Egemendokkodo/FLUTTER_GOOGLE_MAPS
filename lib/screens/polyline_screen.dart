@@ -29,13 +29,11 @@ class _PolylineScreenState extends State<PolylineScreen> {
   void initState() {
     super.initState();
 
-
     final originLat = widget.originLat;
     final originLon = widget.originLon;
     final destinationLat = widget.destinationLat;
     final destinationLon = widget.destinationLon;
     drawPolyline(originLat, originLon, destinationLat, destinationLon);
-
   }
 
   CameraPosition initialPosition =
@@ -68,14 +66,16 @@ class _PolylineScreenState extends State<PolylineScreen> {
             mapType: MapType.normal,
             onMapCreated: (GoogleMapController controller) async {
               _controller.complete(controller);
-              drawPolyline(
-                  widget.originLat, widget.originLon, widget.destinationLat, widget.destinationLon);
+              drawPolyline(widget.originLat, widget.originLon,
+                  widget.destinationLat, widget.destinationLon);
+                  controller.animateCamera(CameraUpdate.newLatLng(LatLng(widget.originLat, widget.originLon)));
+
             },
           ),
           Container(
             margin: const EdgeInsets.all(20),
             padding: const EdgeInsets.all(20),
-            //color: Colors.white,
+            color: Colors.white,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
@@ -92,8 +92,8 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
   void drawPolyline(double originLat, double originLon, double destinationLat,
       double destinationLon) async {
-    
-
+    LatLng origin = LatLng(originLat, originLon);
+    print("huhu:${origin}");
     var response = await http.post(Uri.parse(
         "https://maps.googleapis.com/maps/api/directions/json?key=" +
             apiKey +
@@ -117,8 +117,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
     setState(() {
       totalDistance = distance;
       totalTime = time;
-      initialPosition =
-        CameraPosition(target: LatLng(originLat, originLon), zoom: 14);
+      initialPosition = CameraPosition(target: origin, zoom: 14);
     });
 
     for (int i = 0;
@@ -143,5 +142,4 @@ class _PolylineScreenState extends State<PolylineScreen> {
           color: Colors.red));
     }
   }
-
 }
