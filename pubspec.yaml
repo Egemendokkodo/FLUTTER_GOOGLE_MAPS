@@ -48,6 +48,7 @@ dependencies:
   geocoder: ^0.2.1
   uuid: ^3.0.7
   geocoding: ^2.1.0
+  fluttertoast: ^8.2.1
 
 dev_dependencies:
   flutter_test:

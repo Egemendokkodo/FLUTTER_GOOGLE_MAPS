@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -202,13 +203,24 @@ class _PickDestinationScreenState extends State<PickDestinationScreen> {
         )),
         ElevatedButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => PolylineScreen(originLat: originLat,
-      originLon: originLon,
-      destinationLat: destinationLat,
-      destinationLon: destinationLon,)));
+              if (origin2.text == "" || destination2.text == "") {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text("Please input  all the fields"),
+                    duration: Duration(seconds: 2),
+                  ),
+                );
+              } else {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => PolylineScreen(
+                              originLat: originLat,
+                              originLon: originLon,
+                              destinationLat: destinationLat,
+                              destinationLon: destinationLon,
+                            )));
+              }
             },
             child: Text("click me"))
       ]),
