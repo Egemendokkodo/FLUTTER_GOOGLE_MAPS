@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter_tutorial/screens/pick_destination_screen.dart';
 
 
 import 'screens/polyline_screen.dart';
@@ -31,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
             ElevatedButton(onPressed: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-                return const PolylineScreen();
+                return const PickDestinationScreen();
               }));
             }, child: const Text("Polyline between 2 points"))
           ],
