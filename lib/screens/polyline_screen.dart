@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:geocoding/geocoding.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:google_maps_flutter_tutorial/model/nearby_response.dart';
 import 'package:google_maps_flutter_tutorial/model/polyline_response.dart';
 
 import 'package:http/http.dart' as http;
@@ -28,6 +27,9 @@ class _PolylineScreenState extends State<PolylineScreen> {
   double originLon = 0;
   double destinationLat = 0;
   double destinationLon = 0;
+
+  bool _isVisibleOrigin = true;
+  bool _isVisibleDestination = true;
 
   @override
   void initState() {
@@ -103,12 +105,43 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
   String apiKey = "AIzaSyDXibIT6OM73j0eT_xd28hi-B59puQnT04";
 
-  LatLng origin = const LatLng(41.0082, 28.9784);
-  LatLng destination = const LatLng(41.0144, 28.9674);
+  /*LatLng origin = const LatLng(41.0082, 28.9784);
+  LatLng destination = const LatLng(41.0144, 28.9674);*/
 
   PolylineResponse polylineResponse = PolylineResponse();
 
   Set<Polyline> polylinePoints = {};
+
+  void onTapDestination(int index) async {
+    List<Location> locations = await locationFromAddress(
+        placeslistForDestination[index]['description']);
+    destination2.text = placeslistForDestination[index]['description'];
+    destinationLon = locations.last.longitude;
+    destinationLat = locations.last.latitude;
+    setState(() {
+      _isVisibleDestination = false;
+    });
+  }
+
+  void onTapOrigin(int index) async {
+    List<Location> locations =
+        await locationFromAddress(placeslistForOrigin[index]['description']);
+    origin2.text = placeslistForOrigin[index]['description'];
+
+    setState(() {
+      originLon = locations.last.longitude;
+      originLat = locations.last.latitude;
+    });
+    GoogleMapController controller = await _controller.future;
+    CameraPosition position = CameraPosition(
+      target: LatLng(originLat, originLon),
+      zoom: 14,
+    );
+    controller.animateCamera(CameraUpdate.newCameraPosition(position));
+    setState(() {
+      _isVisibleOrigin = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -138,6 +171,14 @@ class _PolylineScreenState extends State<PolylineScreen> {
                 Text("Total Distance: " + totalDistance),
                 Text("Total Time: " + totalTime),
                 TextFormField(
+                  onChanged: (value) {
+                    if(value==""|| value==null){
+                      _isVisibleOrigin = false;
+                    }else{
+                        _isVisibleOrigin = true;
+                    }
+                    
+                  },
                   controller: origin2,
                   decoration: InputDecoration(hintText: "origin"),
                 ),
@@ -145,31 +186,26 @@ class _PolylineScreenState extends State<PolylineScreen> {
                     child: ListView.builder(
                   itemCount: placeslistForOrigin.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      onTap: () async {
-                        List<Location> locations = await locationFromAddress(
-                            placeslistForOrigin[index]['description']);
-                        origin2.text =
-                            placeslistForOrigin[index]['description'];
-                        
-                        setState(() {
-                          originLon = locations.last.longitude;
-                          originLat = locations.last.latitude;
-                        });
-                        GoogleMapController controller =
-                            await _controller.future;
-                        CameraPosition position = CameraPosition(
-                          target: LatLng(originLat, originLon),
-                          zoom: 14,
-                        );
-                        controller.animateCamera(
-                            CameraUpdate.newCameraPosition(position));
-                      },
-                      title: Text(placeslistForOrigin[index]['description']),
+                    return Visibility(
+                      visible: _isVisibleOrigin,
+                      child: ListTile(
+                        onTap: () async {
+                          onTapOrigin(index);
+                        },
+                        title: Text(placeslistForOrigin[index]['description']),
+                      ),
                     );
                   },
                 )),
                 TextFormField(
+                  onChanged: (value) {
+                    if(value==""|| value==null){
+                      _isVisibleDestination = false;
+                    }else{
+                        _isVisibleDestination = true;
+                    }
+                    
+                  },
                   controller: destination2,
                   decoration: InputDecoration(hintText: "destination"),
                 ),
@@ -177,17 +213,15 @@ class _PolylineScreenState extends State<PolylineScreen> {
                     child: ListView.builder(
                   itemCount: placeslistForDestination.length,
                   itemBuilder: (context, index) {
-                    return ListTile(
-                      onTap: () async {
-                        List<Location> locations = await locationFromAddress(
-                            placeslistForDestination[index]['description']);
-                        destination2.text =
-                            placeslistForDestination[index]['description'];
-                        destinationLon = locations.last.longitude;
-                        destinationLat = locations.last.latitude;
-                      },
-                      title:
-                          Text(placeslistForDestination[index]['description']),
+                    return Visibility(
+                      visible: _isVisibleDestination,
+                      child: ListTile(
+                        onTap: () async {
+                          onTapDestination(index);
+                        },
+                        title: Text(
+                            placeslistForDestination[index]['description']),
+                      ),
                     );
                   },
                 )),
@@ -252,5 +286,4 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
     setState(() {});
   }
-  
 }
