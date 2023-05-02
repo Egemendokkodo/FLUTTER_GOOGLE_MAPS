@@ -66,7 +66,7 @@ class _PickDestinationScreenState extends State<PickDestinationScreen> {
   }
 
   void getSuggestionForOrigin(String input) async {
-    String api_key = "AIzaSyDXibIT6OM73j0eT_xd28hi-B59puQnT04";
+    String api_key = "YOUR-API-KEY-HERE";
     String request =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&key=$api_key&sessiontoken=$_sessionToken';
     var response = await http.get(Uri.parse(request));
@@ -83,7 +83,7 @@ class _PickDestinationScreenState extends State<PickDestinationScreen> {
   }
 
   void getSuggestionForDestination(String input) async {
-    String api_key = "AIzaSyDXibIT6OM73j0eT_xd28hi-B59puQnT04";
+    String api_key = "YOUR-API-KEY-HERE";
     String request =
         'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$input&key=$api_key&sessiontoken=$_sessionToken';
     var response = await http.get(Uri.parse(request));
