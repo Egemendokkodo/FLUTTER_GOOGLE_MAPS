@@ -45,7 +45,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
   String totalTime = "";
 
-  String apiKey = "AIzaSyDXibIT6OM73j0eT_xd28hi-B59puQnT04";
+  String apiKey = "YOUR-API-KEY-HERE";
 
   PolylineResponse polylineResponse = PolylineResponse();
 
